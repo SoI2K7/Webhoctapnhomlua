@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Không Gian Chill - Fire Edition</title>
+    <title>Không Gian Chill - YouTube & SoundCloud</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&display=swap" rel="stylesheet">
@@ -81,7 +81,7 @@
             100% { box-shadow: 0 0 25px rgba(255, 159, 67, 0.8); transform: scale(1.05); }
         }
 
-        /* --- HIỆU ỨNG HOVER GLOW TOÀN BỘ (CHỈ PC) --- */
+        /* --- HIỆU ỨNG HOVER GLOW --- */
         @media (hover: hover) {
             .nav-pill:not(.active):not(.fire-effect):hover, 
             .btn-tool:hover, .mood-btn:hover, .btn-fc:hover, 
@@ -91,7 +91,7 @@
             .btn-save-card:hover, .btn-add-confirm:hover,
             .btn-close-zen:hover, .btn-adjust:hover, .btn-set-confirm:hover {
                 transform: translateY(-3px);
-                box-shadow: 0 0 15px rgba(162, 155, 254, 0.6); /* Hào quang tím */
+                box-shadow: 0 0 15px rgba(162, 155, 254, 0.6);
                 transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
                 z-index: 2;
             }
@@ -221,6 +221,7 @@
         .album-art { width: 48px; height: 48px; background: rgba(255,255,255,0.5); border-radius: 12px; background-size: cover; display: flex; align-items: center; justify-content: center; font-size: 24px; }
         input[type=range] { width: 100%; height: 4px; background: rgba(255,255,255,0.3); border-radius: 5px; outline: none; margin-top: 5px; cursor: pointer; flex-grow: 1; }
 
+        /* MUSIC STYLES */
         .spotify-container { margin-top: 15px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); }
         .spotify-toggle { font-size: 11px; font-weight: bold; color: white; cursor: pointer; display: flex; align-items: center; gap: 5px; margin-bottom: 8px; opacity: 0.8; transition: 0.3s; }
         .spotify-toggle:hover { opacity: 1; color: var(--accent-color); }
@@ -248,7 +249,7 @@
         body.focus-active .right-area { width: 100%; justify-content: center; align-items: center; height: 100%; overflow: hidden; }
         body.focus-active #panel-timer { transform: scale(1.4); transition: transform 0.5s ease; z-index: 50; }
 
-        /* --- MOBILE OPTIMIZATION (FIXED NAV & LAYOUT) --- */
+        /* --- MOBILE OPTIMIZATION --- */
         @media (max-width: 768px) {
             body { 
                 flex-direction: column; 
@@ -297,7 +298,6 @@
             body.focus-active .right-area { height: auto; overflow: visible; display: flex; flex-direction: column; align-items: center; width: 100%; }
             body.focus-active #panel-timer { transform: none !important; width: 100% !important; margin-top: 10px; max-width: 400px; }
             
-            /* Sửa nút volume trên mobile */
             #mute-btn { font-size: 24px; padding: 10px; }
             input[type=range] { height: 10px; }
         }
@@ -375,10 +375,10 @@
 
                 <div class="spotify-container">
                     <div class="spotify-toggle" onclick="toggleSpotifyInput(); playSFX('click')">
-                        <i class="fa-brands fa-youtube"></i> Nhập link YouTube/Spotify/SoundCloud
+                        <i class="fa-brands fa-youtube"></i> Nhập link YouTube/SoundCloud
                     </div>
                     <div class="spotify-input-group" id="spotify-input-group">
-                        <input type="text" id="spotify-url" class="spotify-input" placeholder="Dán link...">
+                        <input type="text" id="spotify-url" class="spotify-input" placeholder="Dán link YouTube hoặc SoundCloud...">
                         <button class="btn-spotify-load" onclick="loadCustomEmbed(); playSFX('click')">Phát</button>
                         <button class="btn-spotify-mute" id="btn-ext-mute" onclick="toggleExternalMusic(); playSFX('click')" style="display:none;"><i class="fa-solid fa-volume-high"></i></button>
                     </div>
@@ -536,14 +536,11 @@
         let isYouTubeAudioPlaying = false;
         let currentExternalType = null; 
         
-        // --- LOGIC CHẾ ĐỘ ÂM THANH ---
-        let isExclusiveMode = false; // Mặc định là Mix (false)
+        let isExclusiveMode = false;
 
         function toggleAudioMode() {
             isExclusiveMode = document.getElementById('audio-exclusive-mode').checked;
-            // Nếu bật chế độ Chỉ một, và đang có cả 2 nguồn phát, tắt một cái
             if (isExclusiveMode && !ambientPlayer.paused && isYouTubeAudioPlaying) {
-                // Ưu tiên nhạc ngoài, tắt nhạc nền
                 ambientPlayer.pause();
                 document.getElementById('local-player-controls').style.opacity = '0.3';
             }
@@ -598,7 +595,6 @@
                 btn.style.display = 'none';
                 isYouTubeAudioPlaying = false;
                 
-                // Nếu ở chế độ Chỉ một, khi tắt nhạc ngoài thì tự bật lại nhạc nền
                 if (isExclusiveMode) {
                     ambientPlayer.play();
                     document.getElementById('local-player-controls').style.opacity = '1';
@@ -613,10 +609,15 @@
             
             if(!url) return alert("Vui lòng nhập Link!");
             
+            // Xóa Spotify Check
+            if (url.includes('spotify.com')) {
+                alert("Spotify đã bị loại bỏ. Vui lòng dùng YouTube hoặc SoundCloud.");
+                return;
+            }
+
             if(isYouTubeAudioPlaying && youtubeAudioPlayer) { youtubeAudioPlayer.stopVideo(); isYouTubeAudioPlaying = false; }
             container.innerHTML = '';
             
-            // Xử lý logic CHẾ ĐỘ ÂM THANH
             if (isExclusiveMode) {
                 ambientPlayer.pause();
                 document.getElementById('local-player-controls').style.opacity = '0.3';
@@ -647,12 +648,6 @@
                 const encodedUrl = encodeURIComponent(url);
                 embedSrc = `https://w.soundcloud.com/player/?url=${encodedUrl}&color=%23ff5500&auto_play=true&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true`;
                 currentExternalType = 'soundcloud';
-            } else if(url.includes('spotify.com')) {
-                if(!url.includes('/embed')) {
-                    url = url.replace('spotify.com/', 'https://open.spotify.com/embed/playlist/$2');
-                }
-                embedSrc = url;
-                currentExternalType = 'spotify';
             } 
             
             if(embedSrc) {
@@ -680,7 +675,6 @@
         }
 
         function toggleMute() {
-            // FIX MOBILE: Dùng thuộc tính muted trực tiếp
             if (ambientPlayer.muted || ambientPlayer.volume === 0) {
                 ambientPlayer.muted = false;
                 ambientPlayer.volume = lastVolume > 0 ? lastVolume : 0.5;
@@ -696,10 +690,8 @@
                 if(isMuted) youtubeAudioPlayer.mute();
                 else youtubeAudioPlayer.unMute();
             }
-            
-            // Logic Chế độ: Nếu bật tiếng môi trường mà đang ở Exclusive -> Tắt nhạc ngoài
             if (!isMuted && isExclusiveMode && isYouTubeAudioPlaying) {
-                toggleExternalMusic(); // Tắt nhạc ngoài
+                toggleExternalMusic(); 
             }
 
             updateMuteIcon();
