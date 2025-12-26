@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Không Gian Chill - Auto Resume Fixed</title>
+    <title>Không Gian Chill - Update Log & UI Fix</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&display=swap" rel="stylesheet">
@@ -49,11 +49,11 @@
         }
 
         /* --- UI LAYERS --- */
-        .left-sidebar, .right-area, .top-nav-container, #intro-overlay, #zen-overlay {
+        .left-sidebar, .right-area, .top-nav-container, #intro-overlay, #zen-overlay, #update-log-modal {
             position: relative; z-index: 10; 
         }
         .left-sidebar *, .right-area *, .top-nav-container * { pointer-events: auto; }
-        #intro-overlay, #zen-overlay { pointer-events: auto !important; }
+        #intro-overlay, #zen-overlay, #update-log-modal { pointer-events: auto !important; }
         
         /* --- NAV BAR --- */
         .top-nav-container {
@@ -80,8 +80,41 @@
             100% { box-shadow: 0 0 25px rgba(255, 159, 67, 0.8); transform: scale(1.05); }
         }
 
+        /* --- UPDATE LOG STYLES --- */
+        .btn-update-log {
+            position: fixed; bottom: 20px; right: 20px; z-index: 998;
+            width: 40px; height: 40px; border-radius: 50%;
+            background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4);
+            color: white; font-size: 18px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            backdrop-filter: blur(10px); transition: 0.3s;
+        }
+        .btn-update-log:hover { background: var(--accent-color); transform: scale(1.1); }
+
+        #update-log-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(10px);
+            z-index: 10001; display: none; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.3s ease;
+        }
+        #update-log-modal.active { display: flex; opacity: 1; }
+        .log-content {
+            background: rgba(30, 30, 30, 0.9); border: 1px solid rgba(255,255,255,0.2);
+            width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto;
+            border-radius: 20px; padding: 25px; color: white; position: relative;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+        .log-item { margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .log-date { font-size: 12px; color: var(--accent-color); font-weight: bold; margin-bottom: 5px; }
+        .log-desc { font-size: 14px; line-height: 1.5; color: #ddd; }
+        .log-version { display: inline-block; background: var(--accent-color); color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; margin-right: 5px; }
+        .btn-close-log {
+            position: absolute; top: 15px; right: 15px; background: transparent; border: none; color: #aaa; font-size: 20px; cursor: pointer;
+        }
+
+        /* --- HOVER GLOW --- */
         @media (hover: hover) {
-            .nav-pill:not(.active):not(.fire-effect):hover, .btn-tool:hover, .mood-btn:hover, .btn-fc:hover, .btn-timer:hover, .spotify-toggle:hover, .explore-item:hover, .buddy-item:hover, .btn-spotify-load:hover, .btn-spotify-stop:hover, .btn-save-card:hover, .btn-add-confirm:hover, .btn-close-zen:hover, .btn-adjust:hover, .btn-set-confirm:hover {
+            .nav-pill:not(.active):not(.fire-effect):hover, .btn-tool:hover, .mood-btn:hover, .btn-fc:hover, .btn-timer:hover, .spotify-toggle:hover, .explore-item:hover, .buddy-item:hover, .btn-spotify-load:hover, .btn-spotify-stop:hover, .btn-save-card:hover, .btn-add-confirm:hover, .btn-close-zen:hover, .btn-adjust:hover, .btn-set-confirm:hover, .btn-update-log:hover {
                 transform: translateY(-3px);
                 box-shadow: 0 0 15px rgba(162, 155, 254, 0.6);
                 transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -213,18 +246,17 @@
         .album-art { width: 48px; height: 48px; background: rgba(255,255,255,0.5); border-radius: 12px; background-size: cover; display: flex; align-items: center; justify-content: center; font-size: 24px; }
         input[type=range] { width: 100%; height: 4px; background: rgba(255,255,255,0.3); border-radius: 5px; outline: none; margin-top: 5px; cursor: pointer; flex-grow: 1; }
 
-        /* MUSIC STYLES */
+        /* MUSIC STYLES - UPDATED */
         .spotify-container { margin-top: 15px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); }
-        .spotify-toggle { font-size: 11px; font-weight: bold; color: white; cursor: pointer; display: flex; align-items: center; gap: 5px; margin-bottom: 8px; opacity: 0.8; transition: 0.3s; }
+        .spotify-toggle { font-size: 13px; font-weight: bold; color: white; cursor: pointer; display: flex; align-items: center; gap: 5px; margin-bottom: 8px; opacity: 0.9; transition: 0.3s; }
         .spotify-toggle:hover { opacity: 1; color: var(--accent-color); }
-        .spotify-input-group { display: none; gap: 5px; margin-bottom: 10px; }
-        .spotify-input { flex-grow: 1; padding: 6px; border-radius: 8px; border: none; font-size: 11px; outline: none; background: rgba(255,255,255,0.8); color: #333; }
-        .btn-spotify-load, .btn-spotify-stop { padding: 6px 10px; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; font-size: 11px; }
+        .spotify-input-group { display: none; gap: 5px; margin-bottom: 10px; flex-wrap: wrap; }
+        .spotify-input { flex-grow: 1; padding: 8px; border-radius: 8px; border: none; font-size: 12px; outline: none; background: rgba(255,255,255,0.8); color: #333; }
+        .btn-spotify-load, .btn-spotify-stop { padding: 8px 12px; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; font-size: 12px; }
         .btn-spotify-load { background: #1DB954; }
         .btn-spotify-stop { background: #e74c3c; display: none; }
         #embed-container iframe { width: 100%; border-radius: 12px; border: none; margin-top: 5px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         
-        /* SEPARATE EXTERNAL AUDIO CONTROL (NEW) */
         #external-audio-controls { display: none; margin-top: 10px; background: rgba(0,0,0,0.2); padding: 8px; border-radius: 12px; }
         .ext-controls-row { display: flex; align-items: center; gap: 10px; font-size: 12px; color: #eee; }
         
@@ -241,13 +273,7 @@
         input:checked + .slider { background-color: var(--accent-color); }
         input:checked + .slider:before { transform: translateX(16px); }
 
-        /* DISABLED CONTROLS STYLE */
-        .disabled-controls {
-            opacity: 0.3;
-            pointer-events: none;
-            filter: grayscale(100%);
-            transition: all 0.3s ease;
-        }
+        .disabled-controls { opacity: 0.3; pointer-events: none; filter: grayscale(100%); transition: all 0.3s ease; }
 
         /* FOCUS MODE - DESKTOP */
         body.focus-active .left-sidebar { display: none !important; }
@@ -257,54 +283,22 @@
 
         /* --- MOBILE OPTIMIZATION --- */
         @media (max-width: 768px) {
-            body { 
-                flex-direction: column; 
-                overflow-y: auto; 
-                height: auto; 
-                min-height: 100vh;
-                padding: 15px;
-                gap: 20px;
-                justify-content: flex-start;
-                padding-top: 70px;
-            }
-            .top-nav-container { 
-                position: fixed; 
-                top: 15px; left: 50%; transform: translateX(-50%) translateY(-150%);
-                margin-bottom: 0; 
-                flex-wrap: nowrap; 
-                justify-content: center; 
-                width: 90%;
-                max-width: 400px;
-                transition: transform 0.5s ease, opacity 0.5s ease;
-                opacity: 0;
-                pointer-events: none;
-                box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-            }
-            .top-nav-container.visible {
-                opacity: 1;
-                pointer-events: auto;
-                transform: translateX(-50%) translateY(0);
-            }
-            .nav-pill {
-                font-size: 11px;
-                padding: 8px 12px;
-                min-height: auto;
-                white-space: nowrap;
-            }
+            body { flex-direction: column; overflow-y: auto; height: auto; min-height: 100vh; padding: 15px; gap: 20px; justify-content: flex-start; padding-top: 70px; }
+            .top-nav-container { position: fixed; top: 15px; left: 50%; transform: translateX(-50%) translateY(-150%); margin-bottom: 0; flex-wrap: nowrap; justify-content: center; width: 90%; max-width: 400px; transition: transform 0.5s ease, opacity 0.5s ease; opacity: 0; pointer-events: none; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+            .top-nav-container.visible { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
+            .nav-pill { font-size: 11px; padding: 8px 12px; min-height: auto; white-space: nowrap; }
             .left-sidebar, .right-area { width: 100%; max-height: none; padding: 0; overflow: visible; }
             .cozy-panel { margin-bottom: 15px; width: 100%; }
             #video-bg-container { position: fixed; }
-            
             .btn-tool, .btn-adjust, .btn-fc, .mood-btn { min-height: 44px; }
             .btn-adjust { width: 40px; height: 40px; }
             #intro-overlay .mood-grid { grid-template-columns: repeat(2, 1fr); }
-
             body.focus-active { padding-top: 90px; align-items: center; justify-content: flex-start; }
             body.focus-active .right-area { height: auto; overflow: visible; display: flex; flex-direction: column; align-items: center; width: 100%; }
             body.focus-active #panel-timer { transform: none !important; width: 100% !important; margin-top: 10px; max-width: 400px; }
-            
             #mute-btn { font-size: 24px; padding: 10px; }
             input[type=range] { height: 10px; }
+            .btn-update-log { bottom: 15px; right: 15px; }
         }
     </style>
 </head>
@@ -340,6 +334,39 @@
         <div class="zen-quote" id="zen-quote">"..."</div>
         <button class="btn-close-zen" onclick="closeZenMode(); playSFX('click')">Mình ổn rồi, quay lại thôi</button>
     </div>
+
+    <div id="update-log-modal">
+        <div class="log-content">
+            <button class="btn-close-log" onclick="toggleUpdateLog()"><i class="fa-solid fa-xmark"></i></button>
+            <h2 style="margin-bottom: 20px; text-align: center;">Nhật ký cập nhật 📜</h2>
+            
+            <div class="log-item">
+                <div class="log-date"><span class="log-version">v13.5</span> Hôm nay</div>
+                <div class="log-desc">
+                    - Sửa triệt để lỗi không phát được nhạc YouTube khi tải lại trang.<br>
+                    - Làm mới ô nhập liệu khi tải lại (Clean Slate).<br>
+                    - Tăng kích thước chữ & thêm gợi ý SoundCloud.<br>
+                    - Thêm Nhật ký cập nhật.
+                </div>
+            </div>
+            <div class="log-item">
+                <div class="log-date"><span class="log-version">v12.5</span> Hôm qua</div>
+                <div class="log-desc">
+                    - Thêm tính năng "Khóa Âm thanh môi trường" khi ở chế độ "Chỉ một".<br>
+                    - Tối ưu giao diện Mobile (Nav bar, nền video full).
+                </div>
+            </div>
+             <div class="log-item">
+                <div class="log-date"><span class="log-version">v11.0</span> Trước đó</div>
+                <div class="log-desc">
+                    - Thêm hiệu ứng "Lửa" và Hover Glow.<br>
+                    - Tách biệt điều khiển âm lượng YouTube và Môi trường.
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <button class="btn-update-log" onclick="toggleUpdateLog()" title="Xem nhật ký cập nhật">📜</button>
 
     <div class="top-nav-container" id="main-nav">
         <div class="nav-pill fire-effect" onclick="playSFX('click')"><i class="fa-solid fa-fire"></i> Lửa</div>
@@ -403,10 +430,12 @@
                     <div class="spotify-toggle" onclick="toggleSpotifyInput(); playSFX('click')">
                         <i class="fa-brands fa-youtube"></i> Nhập link YouTube/SoundCloud
                     </div>
+                    <div style="font-size: 10px; color: #aaa; margin-bottom: 5px; margin-left: 5px;">(Khuyên dùng SoundCloud để ổn định nhất)</div>
+                    
                     <div class="spotify-input-group" id="spotify-input-group">
-                        <input type="text" id="spotify-url" class="spotify-input" placeholder="Dán link...">
+                        <input type="text" id="spotify-url" class="spotify-input" placeholder="Dán link YouTube hoặc SoundCloud...">
                         <button class="btn-spotify-load" onclick="loadCustomEmbed(); playSFX('click')">Phát</button>
-                        <button class="btn-spotify-stop" id="btn-ext-stop" onclick="stopExternalMusic(); playSFX('click')" title="Dừng nhạc & Về Âm thanh nền"><i class="fa-solid fa-stop"></i></button>
+                        <button class="btn-spotify-stop" id="btn-ext-stop" onclick="stopExternalMusic(); playSFX('click')" title="Dừng nhạc"><i class="fa-solid fa-stop"></i></button>
                     </div>
                     
                     <div class="audio-mode-toggle">
@@ -557,25 +586,26 @@
         const videoContainer = document.getElementById('video-bg-container');
         const ambientPlayer = document.getElementById('ambient-audio');
         
-        // AMBIENT VARS
         let isAmbientMuted = false; 
         let lastAmbientVolume = 0.5;
 
-        // EXTERNAL VARS
         let youtubeAudioPlayer = null;
         let isYouTubeAudioPlaying = false;
         let currentExternalType = null; 
         let isExternalMuted = false;
         let lastExternalVolume = 50;
-        let isYouTubeReady = false; // NEW FLAG
+        let isYouTubeReady = false; 
 
-        // MODE
         let isExclusiveMode = false;
         let pendingYouTubeId = null; 
 
+        function toggleUpdateLog() {
+            const modal = document.getElementById('update-log-modal');
+            modal.classList.toggle('active');
+        }
+
         function toggleAudioMode() {
             isExclusiveMode = document.getElementById('audio-exclusive-mode').checked;
-            // Update logic checkExclusiveState
             checkExclusiveState();
         }
 
@@ -584,11 +614,9 @@
             const isExternalPlaying = isYouTubeAudioPlaying || currentExternalType === 'soundcloud';
             
             if (isExclusiveMode && isExternalPlaying) {
-                // LOCK
                 ambientPlayer.pause();
                 controls.classList.add('disabled-controls');
             } else {
-                // UNLOCK
                 controls.classList.remove('disabled-controls');
                 if (ambientPlayer.paused && !isAmbientMuted) {
                     ambientPlayer.play().catch(e=>{});
@@ -619,24 +647,10 @@
         }
         
         function onPlayerReady(event) {
-            isYouTubeReady = true; // API Ready
+            isYouTubeReady = true; 
             if (pendingYouTubeId) {
-                // Execute pending video load
-                youtubeAudioPlayer.loadVideoById(pendingYouTubeId);
-                youtubeAudioPlayer.setVolume(lastExternalVolume);
-                isYouTubeAudioPlaying = true;
-                
-                const container = document.getElementById('embed-container');
-                container.innerHTML = `<div style="padding:15px; font-size:13px; font-weight:bold; color:var(--accent-color); background:rgba(255,255,255,0.8); border-radius:12px; text-align:center;"><i class="fa-brands fa-youtube" style="color:red;"></i> Đang phát từ YouTube...</div>`;
-                container.style.display = 'block';
-                
-                document.getElementById('btn-ext-stop').style.display = 'inline-block';
-                document.getElementById('external-audio-controls').style.display = 'block';
-                
-                currentExternalType = 'youtube';
-                
-                checkExclusiveState();
-                pendingYouTubeId = null;
+                // TỰ ĐỘNG PHÁT NẾU CÓ LỆNH CHỜ
+                loadCustomEmbed();
             }
         }
 
@@ -662,7 +676,6 @@
             return match ? match[1] : null;
         }
 
-        // --- STOP EXTERNAL & RESTORE AMBIENT ---
         function stopExternalMusic() {
             const btn = document.getElementById('btn-ext-stop');
             const extControls = document.getElementById('external-audio-controls');
@@ -678,59 +691,46 @@
                 isYouTubeAudioPlaying = false;
             }
             
-            // Check state again to unlock ambient
             checkExclusiveState();
         }
 
-        function loadCustomEmbed(isAutoLoad = false) {
+        function loadCustomEmbed() {
             let url = document.getElementById('spotify-url').value.trim();
             const container = document.getElementById('embed-container');
             const stopBtn = document.getElementById('btn-ext-stop');
             const extControls = document.getElementById('external-audio-controls');
             
-            if(!url) {
-                if(!isAutoLoad) alert("Vui lòng nhập Link!");
-                return;
-            }
-            
-            if (url.includes('spotify.com')) {
-                alert("Spotify đã bị loại bỏ. Vui lòng dùng YouTube hoặc SoundCloud.");
-                return;
-            }
+            if(!url) return; 
 
-            if(isYouTubeAudioPlaying && youtubeAudioPlayer) { 
-                // Just reloading logic
-            } else {
-                 container.innerHTML = '';
-            }
-            
             const youtubeId = getYouTubeId(url);
             
-            // YOUTUBE
+            // YOUTUBE LOGIC
             if (youtubeId) {
-                // Logic chờ lệnh (Queue)
-                if(isYouTubeReady && youtubeAudioPlayer && youtubeAudioPlayer.loadVideoById) {
-                    youtubeAudioPlayer.loadVideoById(youtubeId);
-                    youtubeAudioPlayer.setVolume(lastExternalVolume);
-                    isYouTubeAudioPlaying = true;
-                    currentExternalType = 'youtube';
-                    
-                    container.innerHTML = `<div style="padding:15px; font-size:13px; font-weight:bold; color:var(--accent-color); background:rgba(255,255,255,0.8); border-radius:12px; text-align:center;"><i class="fa-brands fa-youtube" style="color:red;"></i> Đang phát từ YouTube...</div>`;
-                    container.style.display = 'block';
-                    stopBtn.style.display = 'inline-block';
-                    extControls.style.display = 'block'; 
-                    
-                    // Xoá alert cũ, chỉ chạy
-                    localStorage.setItem('saved_music_url', url);
-                    checkExclusiveState();
-                    return;
-                } else {
-                    // Chưa sẵn sàng -> Lưu vào pending để onPlayerReady xử lý
+                // NẾU API CHƯA SẴN SÀNG -> CHỜ (KHÔNG ALERT)
+                if(!isYouTubeReady || !youtubeAudioPlayer || !youtubeAudioPlayer.loadVideoById) {
                     pendingYouTubeId = youtubeId;
+                    container.innerHTML = `<div style="padding:10px; font-size:12px; color:var(--accent-color); background:rgba(255,255,255,0.8); border-radius:8px; text-align:center;">⏳ Đang kết nối YouTube...</div>`;
+                    container.style.display = 'block';
+                    return; 
                 }
+
+                // API SẴN SÀNG -> PHÁT
+                youtubeAudioPlayer.loadVideoById(youtubeId);
+                youtubeAudioPlayer.setVolume(lastExternalVolume);
+                isYouTubeAudioPlaying = true;
+                currentExternalType = 'youtube';
+                
+                container.innerHTML = `<div style="padding:15px; font-size:13px; font-weight:bold; color:var(--accent-color); background:rgba(255,255,255,0.8); border-radius:12px; text-align:center;"><i class="fa-brands fa-youtube" style="color:red;"></i> Đang phát từ YouTube...</div>`;
+                container.style.display = 'block';
+                stopBtn.style.display = 'inline-block';
+                extControls.style.display = 'block'; 
+                
+                checkExclusiveState();
+                pendingYouTubeId = null;
+                return;
             }
             
-            // SOUNDCLOUD
+            // SOUNDCLOUD LOGIC
             let embedSrc = "";
             if (url.includes('soundcloud.com')) {
                 const encodedUrl = encodeURIComponent(url);
@@ -743,16 +743,13 @@
                 container.innerHTML = `<iframe src="${embedSrc}" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
                 container.style.display = 'block';
                 stopBtn.style.display = 'inline-block';
-                localStorage.setItem('saved_music_url', url);
                 checkExclusiveState();
             }
         }
 
-        // --- XOÁ LINK KHI RELOAD (CLEAN SLATE) ---
+        // CLEAN SLATE ON RELOAD
         window.addEventListener('load', () => {
-             // Reset input
              document.getElementById('spotify-url').value = "";
-             // Reset pending state
              pendingYouTubeId = null;
         });
 
