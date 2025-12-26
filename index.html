@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Không Gian Chill - Mobile Perfect</title>
+    <title>Không Gian Chill - Mobile Fixed</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&display=swap" rel="stylesheet">
@@ -11,7 +11,6 @@
     
     <style>
         :root {
-            /* KÍNH LỎNG (LIQUID GLASS) */
             --card-bg: rgba(255, 255, 255, 0.25);
             --glass-border: 1px solid rgba(255, 255, 255, 0.3);
             --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
@@ -34,17 +33,23 @@
             position: relative;
         }
 
-        /* --- VIDEO BACKGROUND --- */
+        /* --- VIDEO BACKGROUND (FIX KHUYẾT HÌNH) --- */
         #video-bg-container {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; 
+            /* Dùng dvh để fix lỗi thanh địa chỉ trên mobile */
+            height: 100dvh; 
             z-index: 0; overflow: hidden; background-color: #000; pointer-events: none;
             opacity: 0; transition: opacity 1s ease-in-out;
         }
         #video-bg-container.active { opacity: 1; }
         
         #bg-video-player {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; transform: scale(1.02); 
+            position: absolute; top: 50%; left: 50%; 
+            min-width: 100%; min-height: 100%;
+            width: auto; height: auto;
+            /* Phóng to 1.1 để bù trừ phần khuyết khi lướt web trên mobile */
+            transform: translate(-50%, -50%) scale(1.1); 
+            object-fit: cover;
         }
 
         /* --- UI LAYERS --- */
@@ -53,9 +58,25 @@
         }
         .left-sidebar *, .right-area *, .top-nav-container * { pointer-events: auto; }
         #intro-overlay, #zen-overlay { pointer-events: auto !important; }
-        .top-nav-container { position: absolute; } 
+        
+        /* --- NAV BAR (DESKTOP) --- */
+        .top-nav-container {
+            position: absolute; /* Desktop dùng absolute */
+            background: var(--card-bg);
+            backdrop-filter: blur(20px) saturate(150%);
+            -webkit-backdrop-filter: blur(20px) saturate(150%);
+            border: var(--glass-border); box-shadow: var(--glass-shadow);
+            top: 25px; left: 50%; transform: translateX(-50%); 
+            display: flex; gap: 12px; padding: 8px; border-radius: 50px; z-index: 999;
+            transition: all 0.5s ease;
+            opacity: 0; pointer-events: none; /* Mặc định ẩn */
+        }
 
-        /* --- PANEL STYLES (GLASS) --- */
+        .top-nav-container.visible {
+            opacity: 1; pointer-events: auto;
+        }
+
+        /* --- PANEL STYLES --- */
         .cozy-panel {
             background: var(--card-bg);
             backdrop-filter: blur(20px) saturate(150%);
@@ -78,41 +99,14 @@
         .cozy-panel.collapsed .mini-display { opacity: 1; }
         p { color: rgba(255,255,255,0.95) !important; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
 
-        /* --- NAV BAR --- */
-        .top-nav-container {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px) saturate(150%);
-            -webkit-backdrop-filter: blur(20px) saturate(150%);
-            border: var(--glass-border); box-shadow: var(--glass-shadow);
-            top: 25px; left: 50%; transform: translateX(-50%); 
-            display: flex; gap: 12px; padding: 8px; border-radius: 50px; z-index: 999; /* Z-index thấp hơn Intro */
-            flex-wrap: wrap; justify-content: center;
-            
-            /* Hiệu ứng ẩn hiện */
-            transition: all 0.5s ease;
-            opacity: 0; 
-            pointer-events: none; 
-            transform: translateX(-50%) translateY(-20px);
-        }
-
-        /* Class để hiện Nav */
-        .top-nav-container.visible {
-            opacity: 1;
-            pointer-events: auto;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        /* Layout */
+        /* Layout Desktop */
         .left-sidebar, .right-area { 
             width: 360px; display: flex; flex-direction: column; gap: 15px; 
             max-height: 100%; overflow-y: auto; padding-right: 5px; padding-bottom: 20px;
         }
-
-        /* Scrollbar */
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.5); border-radius: 10px; }
-        :hover::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.8); }
 
         /* Controls */
         .learning-filter { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
@@ -220,7 +214,7 @@
         body.focus-active .right-area { width: 100%; justify-content: center; align-items: center; height: 100%; overflow: hidden; }
         body.focus-active #panel-timer { transform: scale(1.4); transition: transform 0.5s ease; z-index: 50; }
 
-        /* --- MOBILE OPTIMIZATION --- */
+        /* --- MOBILE OPTIMIZATION (FIXED) --- */
         @media (max-width: 768px) {
             body { 
                 flex-direction: column; 
@@ -230,27 +224,30 @@
                 padding: 15px;
                 gap: 20px;
                 justify-content: flex-start;
+                padding-top: 60px; /* Chừa chỗ cho Nav Fixed */
             }
             .top-nav-container { 
-                position: relative; /* Không để absolute nữa */
-                top: 0; left: 0; transform: none; 
-                margin-bottom: 10px; 
-                flex-wrap: wrap; 
+                position: fixed; /* Ghim chặt lên đầu */
+                top: 15px; left: 50%; transform: translateX(-50%) translateY(-150%); /* Mặc định ẩn lên trên */
+                margin-bottom: 0; 
+                flex-wrap: nowrap; /* Không xuống dòng */
                 justify-content: center; 
-                width: 100%;
-                opacity: 0; /* Mặc định ẩn trên mobile khi chưa chọn mood */
+                width: 90%;
+                transition: transform 0.5s ease, opacity 0.5s ease;
+                opacity: 0;
                 pointer-events: none;
-                display: none; /* Ẩn hẳn để không chiếm chỗ */
+                box-shadow: 0 4px 20px rgba(0,0,0,0.3);
             }
             .top-nav-container.visible {
                 opacity: 1;
                 pointer-events: auto;
-                display: flex;
+                transform: translateX(-50%) translateY(0); /* Trượt xuống */
             }
             .nav-pill {
-                font-size: 12px;
-                padding: 6px 12px;
-                min-height: 35px;
+                font-size: 11px;
+                padding: 8px 12px;
+                min-height: auto;
+                white-space: nowrap;
             }
             .left-sidebar, .right-area { 
                 width: 100%; 
@@ -261,19 +258,18 @@
             .cozy-panel { margin-bottom: 15px; width: 100%; }
             #video-bg-container { position: fixed; }
             
-            /* Tăng kích thước nút cho dễ bấm */
             .btn-tool, .btn-adjust, .btn-fc, .mood-btn { min-height: 44px; }
             .btn-adjust { width: 40px; height: 40px; }
             #intro-overlay .mood-grid { grid-template-columns: repeat(2, 1fr); }
 
             /* FOCUS MODE MOBILE FIX */
-            body.focus-active { padding-top: 20px; align-items: center; justify-content: flex-start; }
+            body.focus-active { padding-top: 80px; align-items: center; justify-content: flex-start; }
             body.focus-active .right-area { height: auto; overflow: visible; display: flex; flex-direction: column; align-items: center; width: 100%; }
             body.focus-active #panel-timer { transform: none !important; width: 100% !important; margin-top: 10px; max-width: 400px; }
             
             /* Sửa nút volume trên mobile */
             #mute-btn { font-size: 24px; padding: 10px; }
-            input[type=range] { height: 6px; }
+            input[type=range] { height: 10px; }
         }
     </style>
 </head>
@@ -314,7 +310,7 @@
         <div class="nav-pill" onclick="playSFX('click')">Lửa</div>
         <div class="nav-pill active" id="btn-myspace" onclick="switchView('myspace'); playSFX('click')">Không gian</div>
         <div class="nav-pill" id="btn-focus" onclick="switchView('focus'); playSFX('click')">Tập trung</div>
-        <div class="nav-pill sos-btn" onclick="openZenMode(); playSFX('click')">SOS Giảm Stress 🆘</div>
+        <div class="nav-pill sos-btn" onclick="openZenMode(); playSFX('click')">SOS Stress 🆘</div>
     </div>
 
     <div class="left-sidebar">
@@ -341,7 +337,7 @@
                             </div>
                         </div>
                         <div style="display: flex; align-items: center; gap: 10px;">
-                            <i class="fa-solid fa-volume-high" id="mute-btn" onclick="toggleMute(); playSFX('click')" style="cursor: pointer; width: 30px; text-align:center; color: var(--accent-color);"></i>
+                            <i class="fa-solid fa-volume-high" id="mute-btn" onclick="toggleMute(); playSFX('click')" ontouchstart="toggleMute(); playSFX('click')" style="cursor: pointer; width: 30px; text-align:center; color: var(--accent-color);"></i>
                             <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.5" title="Ambient Volume" oninput="changeVolume(this.value)">
                         </div>
                     </div>
@@ -588,11 +584,13 @@
         }
 
         function toggleMute() {
+            // Logic mới cho mobile: Nếu đang tắt -> bật về 50%. Nếu đang bật -> tắt.
             if (isMuted) {
                 ambientPlayer.volume = lastVolume > 0 ? lastVolume : 0.5;
                 document.getElementById('volume-slider').value = ambientPlayer.volume;
                 isMuted = false;
                 if(isYouTubeAudioPlaying && youtubeAudioPlayer) youtubeAudioPlayer.unMute();
+                ambientPlayer.play().catch(e => console.log('Auto-play prevented'));
             } else {
                 lastVolume = ambientPlayer.volume;
                 ambientPlayer.volume = 0;
@@ -862,11 +860,11 @@
             document.querySelectorAll('.explore-item').forEach(el => { el.classList.remove('active'); el.style.backgroundColor = ''; el.style.boxShadow = ''; });
             document.querySelectorAll('.buddy-item').forEach(el => el.classList.remove('active'));
         }
+        
+        // ĐÃ SỬA: Ẩn intro, hiện NAV
         function selectMood(m) { 
             setTheme(m); 
             document.getElementById('intro-overlay').classList.add('hidden-intro');
-            
-            // ĐÃ SỬA: Hiện lại thanh NAV trên mobile sau khi chọn mood
             document.getElementById('main-nav').classList.add('visible');
         }
         function togglePanel(id) { document.getElementById(id).classList.toggle('collapsed'); }
