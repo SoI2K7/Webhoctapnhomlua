@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Không Gian Chill - Fire Effect & UI Fix</title>
+    <title>Không Gian Chill - Final Fix</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&display=swap" rel="stylesheet">
@@ -64,13 +64,23 @@
             border: var(--glass-border); box-shadow: var(--glass-shadow);
             top: 25px; left: 50%; transform: translateX(-50%); 
             display: flex; gap: 12px; 
-            padding: 8px; /* Reset padding to normal */
+            /* EDITED: Tăng padding để nút cao hơn, chữ nằm giữa dễ hơn */
+            padding: 12px; 
             border-radius: 50px; z-index: 999;
             transition: all 0.5s ease; opacity: 0; pointer-events: none;
-            align-items: center; /* Ensure items are centered vertically */
+            align-items: center; 
         }
         .top-nav-container.visible { opacity: 1; pointer-events: auto; }
 
+        .nav-pill {
+            /* EDITED: Tăng padding dọc để chữ không bị sát mép trên */
+            padding: 10px 24px;
+            border-radius: 30px; 
+            font-weight: 700; font-size: 14px; cursor: pointer; color: #333; transition: all 0.3s;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            line-height: 1.2; /* Cân bằng dòng chữ */
+        }
+        
         .nav-pill.fire-effect {
             background: linear-gradient(135deg, #ff4d4d, #ff9f43);
             color: white; font-weight: 800;
@@ -85,12 +95,9 @@
 
         /* --- FIRE SPARK EFFECT --- */
         .spark-particle {
-            position: fixed;
-            width: 6px; height: 6px;
+            position: fixed; width: 6px; height: 6px;
             background: radial-gradient(circle, #ffeb3b, #ff5722);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 10000;
+            border-radius: 50%; pointer-events: none; z-index: 10000;
             animation: spark-burst 0.8s ease-out forwards;
         }
         @keyframes spark-burst {
@@ -228,12 +235,6 @@
         .btn-close-zen { padding: 12px 30px; border: 2px solid rgba(255,255,255,0.3); border-radius: 30px; background: transparent; color: white; cursor: pointer; font-size: 14px; transition: all 0.3s; }
         .btn-close-zen:hover { background: white; color: #333; }
 
-        .nav-pill { 
-            /* EDITED: Tăng padding dọc để nút cao hơn, tránh đè chữ */
-            padding: 10px 20px; 
-            border-radius: 20px; font-weight: 700; font-size: 14px; cursor: pointer; color: #333; transition: all 0.3s; 
-            display: flex; align-items: center; gap: 8px; /* Ensure flex centering */
-        }
         .nav-pill.active { background: var(--accent-color); color: white; }
         .nav-pill.sos-btn { background: #ff7675; color: white; box-shadow: 0 4px 15px rgba(255, 118, 117, 0.4); animation: pulse-red 2s infinite; }
         .nav-pill.sos-btn:hover { background: #d63031; }
@@ -269,7 +270,7 @@
         .album-art { width: 48px; height: 48px; background: rgba(255,255,255,0.5); border-radius: 12px; background-size: cover; display: flex; align-items: center; justify-content: center; font-size: 24px; }
         input[type=range] { width: 100%; height: 4px; background: rgba(255,255,255,0.3); border-radius: 5px; outline: none; margin-top: 5px; cursor: pointer; flex-grow: 1; }
 
-        /* MUSIC STYLES - UPDATED */
+        /* MUSIC STYLES */
         .spotify-container { margin-top: 15px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); }
         .spotify-toggle { font-size: 13px; font-weight: bold; color: white; cursor: pointer; display: flex; align-items: center; gap: 5px; margin-bottom: 8px; opacity: 0.9; transition: 0.3s; }
         .spotify-toggle:hover { opacity: 1; color: var(--accent-color); }
@@ -309,7 +310,13 @@
             body { flex-direction: column; overflow-y: auto; height: auto; min-height: 100vh; padding: 15px; gap: 20px; justify-content: flex-start; padding-top: 70px; }
             .top-nav-container { position: fixed; top: 15px; left: 50%; transform: translateX(-50%) translateY(-150%); margin-bottom: 0; flex-wrap: nowrap; justify-content: center; width: 90%; max-width: 400px; transition: transform 0.5s ease, opacity 0.5s ease; opacity: 0; pointer-events: none; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
             .top-nav-container.visible { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
-            .nav-pill { font-size: 11px; padding: 8px 12px; min-height: auto; white-space: nowrap; }
+            .nav-pill { 
+                /* EDITED: Giảm font size và padding cho mobile để tránh tràn */
+                font-size: 11px; 
+                padding: 10px 14px; 
+                min-height: auto; 
+                white-space: nowrap; 
+            }
             .left-sidebar, .right-area { width: 100%; max-height: none; padding: 0; overflow: visible; }
             .cozy-panel { margin-bottom: 15px; width: 100%; }
             #video-bg-container { position: fixed; }
@@ -364,26 +371,33 @@
             <h2 style="margin-bottom: 20px; text-align: center;">Nhật ký cập nhật 📜</h2>
             
             <div class="log-item">
-                <div class="log-date"><span class="log-version">v13.7</span> 27/05/2024</div>
+                <div class="log-date"><span class="log-version">v13.8</span> 26/12/2025</div>
                 <div class="log-desc">
-                    - Fix lỗi chữ nút SOS bị đè.<br>
-                    - Thêm ngày tháng cụ thể vào nhật ký.<br>
-                    - Thêm hiệu ứng tia lửa khi bấm nút "Lửa".
+                    - Sửa lỗi hiển thị nút SOS bị lệch trên Mobile.<br>
+                    - Cập nhật thời gian thực cho nhật ký.<br>
+                    - Tinh chỉnh khoảng cách nút điều hướng.
                 </div>
             </div>
             <div class="log-item">
-                <div class="log-date"><span class="log-version">v13.6</span> 26/05/2024</div>
+                <div class="log-date"><span class="log-version">v13.7</span> 26/12/2025</div>
                 <div class="log-desc">
-                    - Căn chỉnh lại giao diện Nav bar.<br>
-                    - Cập nhật nội dung nhật ký.
+                    - Thêm hiệu ứng tia lửa khi bấm nút "Lửa".<br>
+                    - Cải thiện giao diện Mobile.
                 </div>
             </div>
             <div class="log-item">
-                <div class="log-date"><span class="log-version">v13.5</span> 25/05/2024</div>
+                <div class="log-date"><span class="log-version">v13.5</span> 25/12/2025</div>
                 <div class="log-desc">
                     - Làm mới ô nhập liệu khi tải lại (Clean Slate).<br>
                     - Tăng kích thước chữ & thêm gợi ý SoundCloud.<br>
                     - Thêm Nhật ký cập nhật.
+                </div>
+            </div>
+             <div class="log-item">
+                <div class="log-date"><span class="log-version">v12.5</span> 24/12/2025</div>
+                <div class="log-desc">
+                    - Thêm tính năng "Khóa Âm thanh môi trường" khi ở chế độ "Chỉ một".<br>
+                    - Tối ưu giao diện Mobile (Nav bar, nền video full).
                 </div>
             </div>
         </div>
@@ -629,23 +643,20 @@
 
         // --- FIRE EFFECT FUNCTION ---
         function triggerFireEffect(e) {
-            const numSparks = 12; // Số lượng tia lửa
+            const numSparks = 12; 
             const container = document.body;
             for (let i = 0; i < numSparks; i++) {
                 const spark = document.createElement('div');
                 spark.classList.add('spark-particle');
-                // Đặt vị trí bắt đầu tại nơi click chuột
                 spark.style.left = e.clientX + 'px';
                 spark.style.top = e.clientY + 'px';
-                // Tạo hướng bay ngẫu nhiên
                 const angle = Math.random() * Math.PI * 2;
-                const distance = 60 + Math.random() * 60; // Khoảng cách bay
+                const distance = 60 + Math.random() * 60; 
                 const tx = Math.cos(angle) * distance;
                 const ty = Math.sin(angle) * distance;
                 spark.style.setProperty('--tx', `${tx}px`);
                 spark.style.setProperty('--ty', `${ty}px`);
                 container.appendChild(spark);
-                // Xóa hạt sau khi animation kết thúc
                 setTimeout(() => spark.remove(), 800);
             }
         }
