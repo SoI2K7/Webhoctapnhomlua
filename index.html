@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Không Gian Chill - Manual Play</title>
+    <title>Không Gian Chill - Smart Lock</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&display=swap" rel="stylesheet">
@@ -240,6 +240,14 @@
         .slider:before { position: absolute; content: ""; height: 12px; width: 12px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--accent-color); }
         input:checked + .slider:before { transform: translateX(16px); }
+
+        /* DISABLED CONTROLS STYLE */
+        .disabled-controls {
+            opacity: 0.3;
+            pointer-events: none;
+            filter: grayscale(100%);
+            transition: all 0.3s ease;
+        }
 
         /* FOCUS MODE - DESKTOP */
         body.focus-active .left-sidebar { display: none !important; }
@@ -562,18 +570,28 @@
 
         // MODE
         let isExclusiveMode = false;
-        // ĐÃ THÊM: Biến lưu ID để phát khi API sẵn sàng
         let pendingYouTubeId = null; 
 
         function toggleAudioMode() {
             isExclusiveMode = document.getElementById('audio-exclusive-mode').checked;
-            if (isExclusiveMode && !ambientPlayer.paused && isYouTubeAudioPlaying) {
+            // Update logic checkExclusiveState
+            checkExclusiveState();
+        }
+
+        function checkExclusiveState() {
+            const controls = document.getElementById('local-player-controls');
+            const isExternalPlaying = isYouTubeAudioPlaying || currentExternalType === 'soundcloud';
+            
+            if (isExclusiveMode && isExternalPlaying) {
+                // LOCK
                 ambientPlayer.pause();
-                document.getElementById('local-player-controls').style.opacity = '0.3';
-            } 
-            else if (!isExclusiveMode && ambientPlayer.paused) {
-                ambientPlayer.play().catch(e=>{});
-                document.getElementById('local-player-controls').style.opacity = '1';
+                controls.classList.add('disabled-controls');
+            } else {
+                // UNLOCK
+                controls.classList.remove('disabled-controls');
+                if (ambientPlayer.paused && !isAmbientMuted) {
+                    ambientPlayer.play().catch(e=>{});
+                }
             }
         }
 
@@ -599,15 +617,12 @@
             });
         }
         
-        // ĐÃ SỬA: Hàm này sẽ tự động phát nếu có video đang chờ
         function onPlayerReady(event) {
             if (pendingYouTubeId) {
-                // Tải video và phát ngay
                 youtubeAudioPlayer.loadVideoById(pendingYouTubeId);
                 youtubeAudioPlayer.setVolume(lastExternalVolume);
                 isYouTubeAudioPlaying = true;
                 
-                // Hiển thị lại giao diện điều khiển
                 const container = document.getElementById('embed-container');
                 container.innerHTML = `<div style="padding:15px; font-size:13px; font-weight:bold; color:var(--accent-color); background:rgba(255,255,255,0.8); border-radius:12px; text-align:center;"><i class="fa-brands fa-youtube" style="color:red;"></i> Đang phát từ YouTube...</div>`;
                 container.style.display = 'block';
@@ -617,13 +632,7 @@
                 
                 currentExternalType = 'youtube';
                 
-                // Xử lý chế độ "Chỉ một" nếu cần
-                if (isExclusiveMode) {
-                    ambientPlayer.pause();
-                    document.getElementById('local-player-controls').style.opacity = '0.3';
-                }
-                
-                // Reset pending ID
+                checkExclusiveState();
                 pendingYouTubeId = null;
             }
         }
@@ -650,6 +659,7 @@
             return match ? match[1] : null;
         }
 
+        // --- STOP EXTERNAL & RESTORE AMBIENT ---
         function stopExternalMusic() {
             const btn = document.getElementById('btn-ext-stop');
             const extControls = document.getElementById('external-audio-controls');
@@ -665,35 +675,34 @@
                 isYouTubeAudioPlaying = false;
             }
             
-            if (ambientPlayer.paused) {
-                ambientPlayer.play().catch(e => console.log(e));
-            }
-            document.getElementById('local-player-controls').style.opacity = '1';
+            // Check state again to unlock ambient
+            checkExclusiveState();
         }
 
-        function loadCustomEmbed() {
+        function loadCustomEmbed(isAutoLoad = false) {
             let url = document.getElementById('spotify-url').value.trim();
             const container = document.getElementById('embed-container');
             const stopBtn = document.getElementById('btn-ext-stop');
             const extControls = document.getElementById('external-audio-controls');
             
-            if(!url) return alert("Vui lòng nhập Link!");
+            if(!url) {
+                if(!isAutoLoad) alert("Vui lòng nhập Link!");
+                return;
+            }
             
             if (url.includes('spotify.com')) {
                 alert("Spotify đã bị loại bỏ. Vui lòng dùng YouTube hoặc SoundCloud.");
                 return;
             }
 
-            if(isYouTubeAudioPlaying && youtubeAudioPlayer) { youtubeAudioPlayer.stopVideo(); isYouTubeAudioPlaying = false; }
-            container.innerHTML = '';
-            
-            if (isExclusiveMode) {
-                ambientPlayer.pause();
-                document.getElementById('local-player-controls').style.opacity = '0.3';
+            if(isYouTubeAudioPlaying && youtubeAudioPlayer) { 
+            } else {
+                 container.innerHTML = '';
             }
-
+            
             const youtubeId = getYouTubeId(url);
             
+            // YOUTUBE
             if (youtubeId) {
                 if(youtubeAudioPlayer && youtubeAudioPlayer.loadVideoById) {
                     youtubeAudioPlayer.loadVideoById(youtubeId);
@@ -707,9 +716,9 @@
                     extControls.style.display = 'block'; 
                     
                     localStorage.setItem('saved_music_url', url);
+                    checkExclusiveState();
                     return;
                 } else {
-                    // API chưa sẵn sàng -> Đưa vào hàng chờ
                     pendingYouTubeId = youtubeId;
                 }
             }
@@ -728,6 +737,7 @@
                 container.style.display = 'block';
                 stopBtn.style.display = 'inline-block';
                 localStorage.setItem('saved_music_url', url);
+                checkExclusiveState();
             }
         }
 
@@ -735,7 +745,6 @@
             const savedUrl = localStorage.getItem('saved_music_url');
             if(savedUrl) { 
                 document.getElementById('spotify-url').value = savedUrl;
-                // Nếu là YouTube ID, set pending để tự chạy khi API ready
                 const yId = getYouTubeId(savedUrl);
                 if(yId) pendingYouTubeId = yId;
             }
