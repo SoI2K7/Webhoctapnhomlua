@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Không Gian Chill - Ôn Thi Cơ Sở Tạo Hình</title>
+    <title>Không Gian Chill - v14.2 Original</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&display=swap" rel="stylesheet">
@@ -56,7 +56,7 @@
         .left-sidebar *, .right-area *, .top-nav-container * { pointer-events: auto; }
         #intro-overlay, #zen-overlay, #update-log-modal { pointer-events: auto !important; }
         
-        /* --- NAV BAR (Giữ nguyên v14.2) --- */
+        /* --- NAV BAR --- */
         .top-nav-container {
             position: absolute;
             background: var(--card-bg);
@@ -80,7 +80,6 @@
             line-height: 1.2; 
         }
         
-        /* Trạng thái Active luôn nổi lên */
         .nav-pill.active { 
             background: var(--accent-color); 
             color: white; 
@@ -106,6 +105,7 @@
             100% { box-shadow: 0 0 25px rgba(255, 159, 67, 0.8); transform: scale(1.05); }
         }
 
+        /* --- FIRE SPARK EFFECT --- */
         .spark-particle {
             position: fixed; width: 6px; height: 6px;
             background: radial-gradient(circle, #ffeb3b, #ff5722);
@@ -117,7 +117,7 @@
             100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
         }
 
-        /* --- UPDATE LOG --- */
+        /* --- UPDATE LOG STYLES --- */
         .btn-update-log {
             position: fixed; bottom: 20px; right: 20px; z-index: 998;
             width: 40px; height: 40px; border-radius: 50%;
@@ -145,9 +145,11 @@
         .log-date { font-size: 12px; color: #aaa; font-weight: bold; margin-bottom: 5px; }
         .log-desc { font-size: 14px; line-height: 1.5; color: #ddd; }
         .log-version { display: inline-block; background: var(--accent-color); color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; margin-right: 8px; }
-        .btn-close-log { position: absolute; top: 15px; right: 15px; background: transparent; border: none; color: #aaa; font-size: 20px; cursor: pointer; }
+        .btn-close-log {
+            position: absolute; top: 15px; right: 15px; background: transparent; border: none; color: #aaa; font-size: 20px; cursor: pointer;
+        }
 
-        /* --- HOVER GLOW (Restored v14.2 behavior) --- */
+        /* --- HOVER GLOW --- */
         @media (hover: hover) {
             .nav-pill:not(.active):not(.fire-effect):not(.nav-clock):hover, 
             .btn-tool:hover, .mood-btn:hover, .btn-fc:hover, 
@@ -163,6 +165,10 @@
                 background: rgba(255,255,255,0.9);
                 color: var(--accent-color);
             }
+            .nav-pill:not(.active):not(.fire-effect):not(.nav-clock):hover {
+                 background: white;
+                 color: var(--accent-color);
+            }
             .buddy-item:hover {
                 transform: translateY(-4px) scale(1.02) !important; 
                 box-shadow: 0 8px 20px rgba(0,0,0,0.3);
@@ -172,7 +178,17 @@
         }
 
         /* --- PANEL STYLES --- */
-        .cozy-panel { background: var(--card-bg); backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%); border: var(--glass-border); box-shadow: var(--glass-shadow); border-radius: var(--radius); transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); display: flex; flex-direction: column; position: relative; overflow: hidden; height: auto; min-height: fit-content; flex-shrink: 0; pointer-events: auto; color: white; }
+        .cozy-panel {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px) saturate(150%);
+            -webkit-backdrop-filter: blur(20px) saturate(150%);
+            border: var(--glass-border); box-shadow: var(--glass-shadow);
+            border-radius: var(--radius);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex; flex-direction: column; position: relative; overflow: hidden;
+            height: auto; min-height: fit-content; flex-shrink: 0; pointer-events: auto;
+            color: white; 
+        }
         .panel-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 20px 25px; min-height: 70px; }
         .panel-header h3 { color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.5); font-size: 18px; }
         .toggle-btn { color: rgba(255,255,255,0.9); }
@@ -184,7 +200,10 @@
         .cozy-panel.collapsed .mini-display { opacity: 1; }
         p { color: rgba(255,255,255,0.95) !important; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
 
-        .left-sidebar, .right-area { width: 360px; display: flex; flex-direction: column; gap: 15px; max-height: 100%; overflow-y: auto; padding-right: 5px; padding-bottom: 20px; }
+        .left-sidebar, .right-area { 
+            width: 360px; display: flex; flex-direction: column; gap: 15px; 
+            max-height: 100%; overflow-y: auto; padding-right: 5px; padding-bottom: 20px;
+        }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.5); border-radius: 10px; }
@@ -238,19 +257,9 @@
         
         #zen-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(20, 40, 50, 0.95); z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.8s ease, visibility 0.8s ease; color: white; pointer-events: auto !important;}
         #zen-overlay.active { opacity: 1; visibility: visible; }
-        .breathing-circle { 
-            width: 200px; height: 200px; 
-            background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%); 
-            border-radius: 50%; 
-            box-shadow: 0 0 50px rgba(168, 230, 207, 0.4); 
-            margin-bottom: 80px; 
-            transform: scale(1); 
-        }
+        .breathing-circle { width: 200px; height: 200px; background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%); border-radius: 50%; box-shadow: 0 0 50px rgba(168, 230, 207, 0.4); margin-bottom: 80px; transform: scale(1); }
         .breathing-anim { animation: breathe 8s infinite ease-in-out; }
-        @keyframes breathe { 
-            0%, 100% { transform: scale(1); opacity: 0.8; } 
-            50% { transform: scale(1.3); opacity: 1; } 
-        }
+        @keyframes breathe { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.35); opacity: 1; } }
         .zen-instruction { font-size: 24px; font-weight: 300; margin-bottom: 20px; letter-spacing: 2px; }
         .zen-quote { font-size: 18px; font-style: italic; max-width: 600px; text-align: center; line-height: 1.6; opacity: 0.9; margin-bottom: 40px; }
         .btn-close-zen { padding: 12px 30px; border: 2px solid rgba(255,255,255,0.3); border-radius: 30px; background: transparent; color: white; cursor: pointer; font-size: 14px; transition: all 0.3s; }
@@ -261,7 +270,6 @@
         .explore-item.active { background: var(--accent-color); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         .buddy-grid { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 10px; }
         .buddy-item { position: relative; height: 70px; border-radius: 12px; cursor: pointer; overflow: hidden; border: 2px solid transparent; background-size: cover; background-position: center; transition: all 0.3s; }
-        /* Fix buddy item hover */
         .buddy-item:hover { transform: translateY(-4px) scale(1.02) !important; }
         .buddy-item.active { border-color: var(--accent-color); transform: scale(1.02); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         .buddy-name { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(0,0,0,0.6); color: white; font-size: 11px; padding: 4px; text-align: center; font-weight: bold;}
@@ -392,42 +400,12 @@
         <div class="log-content">
             <button class="btn-close-log" onclick="toggleUpdateLog()"><i class="fa-solid fa-xmark"></i></button>
             <h2 style="margin-bottom: 20px; text-align: center;">Nhật ký cập nhật 📜</h2>
-            
             <div class="log-item">
-                <div class="log-date"><span class="log-version">v15.0</span> 28/12/2025</div>
+                <div class="log-date"><span class="log-version">v14.2</span> 28/12/2025</div>
                 <div class="log-desc">
-                    - Thêm dữ liệu ôn thi "Cơ sở tạo hình" (Hơn 100 câu hỏi).<br>
-                    - Cập nhật nhật ký từ v10.0 đến hiện tại.<br>
-                    - Giữ nguyên trải nghiệm người dùng v14.2.
-                </div>
-            </div>
-            <div class="log-item">
-                <div class="log-date"><span class="log-version">v14.3</span> 27/12/2025</div>
-                <div class="log-desc">
-                    - Sửa lỗi tỷ lệ nền trên Mobile (Full screen).<br>
-                    - Làm mượt hiệu ứng chuyển cảnh.
-                </div>
-            </div>
-            <div class="log-item">
-                <div class="log-date"><span class="log-version">v14.2</span> 26/12/2025</div>
-                <div class="log-desc">
-                    - Sửa lỗi hình ảnh bạn bè bị giật khi di chuột.<br>
-                    - Cải thiện giao diện Menu trên điện thoại (Scroll ngang).<br>
-                    - Nút đang chọn sẽ luôn nổi lên.
-                </div>
-            </div>
-             <div class="log-item">
-                <div class="log-date"><span class="log-version">v12.x</span> 25/12/2025</div>
-                <div class="log-desc">
-                    - Thêm tính năng "Khóa Âm thanh môi trường".<br>
-                    - Tách biệt điều khiển âm lượng YouTube.
-                </div>
-            </div>
-             <div class="log-item">
-                <div class="log-date"><span class="log-version">v10.x</span> 24/12/2025</div>
-                <div class="log-desc">
-                    - Phiên bản đầu tiên với âm thanh Local.<br>
-                    - Tích hợp YouTube/SoundCloud.
+                    - Khôi phục phiên bản ổn định nhất.<br>
+                    - Loại bỏ dữ liệu thừa.<br>
+                    - Tối ưu hóa trải nghiệm mượt mà.
                 </div>
             </div>
         </div>
@@ -644,97 +622,10 @@
         const BUDDIES = {
             lofi: { type: "local", url: "media/lofigirl-loop-audio.mp4", name: "Lofi Girl (Bản Local)", thumb: "https://img.youtube.com/vi/jfKfPfyJRdk/0.jpg" }
         };
-
-        // --- NEW DATA ADDED ---
         const LEARNING_DATABASE = {
-            "Cơ sở tạo hình": {
-                "Ôn tập": [
-                    { q: "Cơ sở tạo hình là gì?", a: "Là tập hợp kiến thức cơ sở nền tảng được nghiên cứu sắp xếp khoa học đạt hiệu quả thị giác cao." },
-                    { q: "Chức năng xung thần kinh thị giác là gì?", a: "Chuyển thông tin tới bộ nhớ giác quan." },
-                    { q: "Thị giác là gì?", a: "Khả năng tiếp nhận và diễn giải thông tin từ ánh sáng truyền vào mắt." },
-                    { q: "Nhận thức thị giác là gì?", a: "Khả năng hiểu nội dung thông tin từ ánh sáng truyền vào mắt." },
-                    { q: "Điều kiện đầy đủ cảm nhận thị giác là gì?", a: "Mắt, Ánh sáng nhìn được, Tín hiệu hình ảnh." },
-                    { q: "Hệ thống xử lý thông tin của con người có bao nhiêu cấu trúc chính?", a: "3 cấu trúc chính (Bộ nhớ giác quan, Bộ nhớ làm việc, Bộ nhớ dài hạn)." },
-                    { q: "Nhiệm vụ bộ nhớ giác quan là gì?", a: "Lọc thông tin." },
-                    { q: "Nhiệm vụ bộ nhớ làm việc là gì?", a: "Hiểu thông tin." },
-                    { q: "Nhiệm vụ bộ nhớ dài hạn là gì?", a: "Lưu trữ thông tin." },
-                    { q: "Quy trình nhận thức thị giác của con người?", a: "Ánh sáng -> Hình ảnh -> Bộ nhớ giác quan -> Bộ nhớ làm việc -> Mã hóa -> Bộ nhớ dài hạn." },
-                    { q: "Lực thị giác là gì?", a: "Sự chú ý, tập trung của mắt tới một đối tượng." },
-                    { q: "Trường lực là gì?", a: "Sự hấp dẫn tỏa ra xung quanh tín hiệu hình ảnh." },
-                    { q: "Cường lực thị giác là gì?", a: "Mức độ lớn nhỏ của trường lực." },
-                    { q: "Trường thị giác của con người là gì?", a: "Giới hạn mắt người nhìn được trong một không gian bất kỳ." },
-                    { q: "Tổng giới hạn trái – phải của trường thị giác con người?", a: "130 độ (65 trái + 65 phải)." },
-                    { q: "Tổng giới hạn trên – dưới của trường thị giác con người?", a: "75 độ (30 trên + 45 dưới)." },
-                    { q: "Trường thị giác quy ước được xác định như thế nào?", a: "Hình chóp nón đều đáy tròn, góc ở đỉnh 30 độ." },
-                    { q: "Cân bằng thị giác là gì?", a: "Sự sắp xếp tạo độ nhấn hoặc sức căng thị giác hợp lý cho các yếu tố hình thể." },
-                    { q: "Trọng lượng thị giác là gì?", a: "Khía cạnh nặng nhẹ của hình ảnh." },
-                    { q: "Yếu tố ảnh hưởng tới cân bằng thị giác?", a: "Tương phản, hướng, vị trí." },
-                    { q: "Có bao nhiêu cặp cân bằng thị giác?", a: "3 cặp: Trên-dưới, Trái-phải, Trước-sau." },
-                    { q: "Hình dạng thị giác là gì?", a: "Hình dạng vật lý được nhìn thấy, có thông tin và có nghĩa." },
-                    { q: "Cấu trúc tỷ lệ đơn giản thường gặp?", a: "Tỷ lệ 1/3 và Tỷ lệ vàng (1.618)." },
-                    { q: "Hình tròn là hình có hướng như nào?", a: "Vô hướng." },
-                    { q: "Hình vuông và hình chữ nhật có hướng như nào?", a: "Hướng đối lập." },
-                    { q: "Hình lục giác có hướng như nào?", a: "Đa hướng." },
-                    { q: "Hình định hướng là gì?", a: "Hình có chuyển động rõ về một phía." },
-                    { q: "Định hướng chuyển động thị giác là gì?", a: "Tổ chức hiệu ứng hình ảnh theo hướng đơn tuyến." },
-                    { q: "Tại sao phải định hướng chuyển động thị giác?", a: "Để người xem tiếp nhận toàn bộ thông tin thuận lợi nhất." },
-                    { q: "Tại sao sinh viên Đa phương tiện cần hiểu hệ thống xử lý thông tin?", a: "Để ứng dụng đặc điểm đó vào thiết kế hiệu quả." },
-                    { q: "Mối quan hệ giữa lực thị giác và trường lực?", a: "Tỉ lệ thuận." },
-                    { q: "Cấu trúc ẩn của hình vuông cho thấy gì?", a: "Lực tâm mạnh nhất, giảm dần khi ra xa; trục có xu hướng cân bằng." },
-                    { q: "Lực thị giác bị chi phối bởi gì?", a: "Màu sắc, tương phản, kích thước, số lượng, hình dạng, chuyển động..." },
-                    { q: "Mối quan hệ kích thước và cường độ lực thị giác?", a: "Tỉ lệ thuận." },
-                    { q: "Trong cân bằng thị giác, hình hướng lên cho cảm giác gì?", a: "Nhẹ." },
-                    { q: "Trong cân bằng thị giác, hình hướng xuống cho cảm giác gì?", a: "Nặng." },
-                    { q: "Trong cân bằng thị giác, vị trí trung tâm cho cảm giác gì?", a: "Ổn định nhất." },
-                    { q: "Trong cân bằng thị giác, vị trí lệch tâm cho cảm giác gì?", a: "Kém cân bằng, không ổn định." },
-                    { q: "Trọng lượng thị giác cặp trên - dưới?", a: "Dưới nặng hơn trên." },
-                    { q: "Trọng lượng thị giác cặp trái - phải?", a: "Trái nặng hơn phải." },
-                    { q: "Trọng lượng thị giác cặp trước - sau?", a: "Trước nặng hơn sau." },
-                    { q: "Nguyên lý 'làm bằng nhau' của mắt là gì?", a: "Gộp các hình dạng/màu sắc/kích thước gần giống nhau thành một nhóm chung." },
-                    { q: "Hình vô hướng đặt cạnh hình định hướng sẽ ra sao?", a: "Hình vô hướng có xu hướng chuyển động theo hình định hướng." },
-                    { q: "Yếu tố ảnh hưởng lớn nhất đến định hướng chuyển động thị giác?", a: "Bố cục." },
-                    { q: "Tốc độ chuyển động thị giác phụ thuộc vào?", a: "Phông hình, vị trí, màu sắc." },
-                    { q: "Tại sao quảng cáo hay dùng âm thanh/hình ảnh mạnh?", a: "Tạo lực thị giác lớn để hấp dẫn và gây nhớ." },
-                    { q: "Khi nào tạo ra ảo giác?", a: "Khi cường độ lực thị giác đẩy lên quá cao." },
-                    { q: "Tại sao thiết kế cho trẻ em thường bo tròn?", a: "Tạo cảm giác dễ thương, an toàn." },
-                    { q: "Kịch bản đồ họa (Storyboard) ứng dụng rõ nhất ở đâu?", a: "Làm phim." },
-                    { q: "Giao diện (UI) ứng dụng rõ nhất ở đâu?", a: "Thiết kế Web." },
-                    { q: "Điểm có đặc tính gì?", a: "Vô hướng, có tính tập trung, không có chiều." },
-                    { q: "Nét có đặc tính gì?", a: "Có chiều dài, không có chiều rộng/sâu." },
-                    { q: "Diện có đặc tính gì?", a: "Có dài, rộng, không có sâu." },
-                    { q: "Khối có đặc tính gì?", a: "Có dài, rộng, sâu (3 chiều)." },
-                    { q: "Có bao nhiêu loại nét?", a: "4 loại: Có nghĩa, Liên tưởng, Đa nghĩa, Cấu tạo." },
-                    { q: "Hiệu quả tạo rung là gì?", a: "Mắt bị gián đoạn trước hai trường lực bằng nhau cạnh nhau." },
-                    { q: "Phông hình là gì?", a: "Tín hiệu hình ảnh nhỏ đặt trên nền rộng." },
-                    { q: "Hai loại ánh sáng cơ bản?", a: "Tự nhiên và Nhân tạo." },
-                    { q: "Ánh sáng mặt trời tạo hiệu quả gì?", a: "Hình khối rõ nét." },
-                    { q: "Màu cộng cơ bản?", a: "Đỏ (Red), Xanh lục (Green), Xanh lam (Blue)." },
-                    { q: "Màu trừ cơ bản (in ấn)?", a: "Xanh lơ (Cyan), Hồng cánh sen (Magenta), Vàng (Yellow)." },
-                    { q: "Trộn tất cả màu cộng ra màu gì?", a: "Màu trắng." },
-                    { q: "Trộn tất cả màu trừ ra màu gì?", a: "Màu đen." },
-                    { q: "Màu vô sắc là gì?", a: "Đen, Trắng, Xám." },
-                    { q: "Gam màu nóng là gì?", a: "Bước sóng dài, gây cảm giác ấm áp (Đỏ, Cam, Vàng...)." },
-                    { q: "Gam màu lạnh là gì?", a: "Bước sóng ngắn, gây cảm giác mát mẻ (Xanh...)." },
-                    { q: "Phối cảnh một điểm tụ mạnh về gì?", a: "Chiều sâu." },
-                    { q: "Phối cảnh hai điểm tụ mạnh về gì?", a: "Chiều sâu và chiều rộng." },
-                    { q: "Phối cảnh ba điểm tụ mạnh về gì?", a: "Chiều sâu, rộng và cao." },
-                    { q: "Bố cục đăng đối là gì?", a: "Sắp xếp đối xứng qua trục/tâm." },
-                    { q: "Bố cục đường diềm là gì?", a: "Lặp lại theo một chiều (dọc/ngang)." },
-                    { q: "Bố cục dàn trải là gì?", a: "Lặp lại theo cả hai chiều (hoa văn vải...)." },
-                    { q: "Tỷ lệ vàng là bao nhiêu?", a: "Xấp xỉ 1.618." },
-                    { q: "Ai nghiên cứu tỷ lệ vàng?", a: "Fibonacci (trong tự nhiên)." },
-                    { q: "Ai nghiên cứu hình chữ nhật vàng trong kiến trúc?", a: "Le Corbusier." },
-                    { q: "Nhịp điệu là gì?", a: "Sự lặp lại có tổ chức." },
-                    { q: "4 loại nhịp điệu cơ bản?", a: "Liên tục, Tiệm biến, Lồi lõm, Giao thoa." },
-                    { q: "Tương phản là gì?", a: "Sự khác biệt, trái ngược giữa các tín hiệu thị giác." },
-                    { q: "Vi biến là gì?", a: "Sự tương phản nhẹ, chuyển biến dần dần." },
-                    { q: "Tương phản hay Vi biến tạo ấn tượng mạnh hơn?", a: "Tương phản (thu hút thị giác tốt hơn)." }
-                ]
-            },
             "Tiếng Anh": { "Cơ bản": [{ q: "Hello", a: "Xin chào" }, { q: "Apple", a: "Quả táo" }], "IELTS": [{ q: "Serendipity", a: "Sự tình cờ may mắn" }] },
             "Công nghệ": { "HTML": [{ q: "<div>", a: "Thẻ tạo khối" }] }
         };
-        
         const ZEN_QUOTES = ["Hít vào sự bình yên...", "Bạn làm tốt lắm...", "Nghỉ ngơi xíu nhé...", "Hãy nhẹ nhàng với bản thân."];
 
         let studyQueue = [], masteredCount = 0, totalCards = 0, currentSubject = "", currentLevel = "";
@@ -760,6 +651,7 @@
             modal.classList.toggle('active');
         }
 
+        // --- REAL TIME CLOCK ---
         function updateRealTime() {
             const now = new Date();
             const timeString = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
@@ -767,6 +659,7 @@
         }
         setInterval(updateRealTime, 1000);
 
+        // --- FIRE EFFECT FUNCTION ---
         function triggerFireEffect(e) {
             const numSparks = 12; 
             const container = document.body;
@@ -885,6 +778,7 @@
 
             const youtubeId = getYouTubeId(url);
             
+            // YOUTUBE LOGIC
             if (youtubeId) {
                 if(!isYouTubeReady || !youtubeAudioPlayer || !youtubeAudioPlayer.loadVideoById) {
                     pendingYouTubeId = youtubeId;
@@ -908,6 +802,7 @@
                 return;
             }
             
+            // SOUNDCLOUD LOGIC
             let embedSrc = "";
             if (url.includes('soundcloud.com')) {
                 const encodedUrl = encodeURIComponent(url);
@@ -927,9 +822,10 @@
         window.addEventListener('load', () => {
              document.getElementById('spotify-url').value = "";
              pendingYouTubeId = null;
-             updateRealTime(); 
+             updateRealTime(); // Start clock immediately
         });
 
+        // --- AMBIENT CONTROLS ---
         function changeAmbientVolume(val) {
             ambientPlayer.volume = val;
             isAmbientMuted = (val == 0);
@@ -963,6 +859,7 @@
             }
         }
 
+        // --- EXTERNAL CONTROLS (YOUTUBE) ---
         function changeExternalVolume(val) {
             lastExternalVolume = val;
             if(youtubeAudioPlayer && isYouTubeAudioPlaying) {
